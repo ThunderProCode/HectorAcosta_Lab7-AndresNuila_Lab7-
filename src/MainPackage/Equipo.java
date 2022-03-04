@@ -1,17 +1,37 @@
 package MainPackage;
 public class Equipo {
     private String name;
-    private int pj = 0;
-    private int pg = 0;    
-    private int pe = 0;
-    private int pp = 0;
-    private int gf = 0;
-    private int gc = 0;
-    private int dg = 0;
-    private int pts = 0;
+    private int pj;
+    private int pg;   
+    private int pe;
+    private int pp;
+    private int gf;
+    private int gc;
+    private int dg;
+    private int pts;
 
     public Equipo(String name) {
         this.name = name;
+        this.pj = 0;
+        this.pg = 0;
+        this.pe = 0;
+        this.pp = 0;
+        this.gf = 0;
+        this.gc = 0;
+        this.dg = 0;
+        this.pts = 0;
+    }
+
+    public Equipo(String name, int pj, int pg, int pe, int pp, int gf, int gc, int dg, int pts) {
+        this.name = name;
+        this.pj = pj;
+        this.pg = pg;
+        this.pe = pe;
+        this.pp = pp;
+        this.gf = gf;
+        this.gc = gc;
+        this.dg = dg;
+        this.pts = pts;
     }
     
     /**
@@ -175,6 +195,11 @@ public class Equipo {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setGf(int gf) {
+        this.gf = gf;
+    }
+    
 
     @Override
     public String toString() {
