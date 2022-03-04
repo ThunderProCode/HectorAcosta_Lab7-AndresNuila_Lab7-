@@ -47,6 +47,29 @@ public class Functions {
         }
     }
     
+    //Load file from another file
+    public static void readFile(File selectedFile){
+        try{
+            Scanner sc = new Scanner(selectedFile);
+            try{
+                FileWriter writer = new FileWriter("C:\\Users\\ThunderKnight\\Documents\\CODE 2022\\LabP2\\Lab7P2_HectorAcosta\\teams.txt");
+                while(sc.hasNextLine()){
+                    String data = sc.nextLine();
+                    writer.write(data+"\n");
+                }
+                writer.close();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            sc.close();
+            
+        }catch(FileNotFoundException e){
+            System.out.println("Archivo no encontrado");
+            e.printStackTrace();
+        }
+    }
+    
+    
     //Carga los equipos ya existentes
     public static void loadTeams(){
         try{

@@ -11,6 +11,7 @@ public class Main {
         MainScreen.fillTable();
         MainScreen.loadTeams();
         MainScreen.sortArrayList();
+ 
     }
 
     public static MainScreen getMainScreen() {
@@ -28,5 +29,7 @@ public class Main {
     public static void setEditScreen(EditScreen EditScreen) {
         Main.EditScreen = EditScreen;
     }
+
+
     
 }

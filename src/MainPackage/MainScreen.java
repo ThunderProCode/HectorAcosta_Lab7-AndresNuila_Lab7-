@@ -5,7 +5,9 @@
  */
 package MainPackage;
 
+import java.io.File;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.TableView.TableRow;
@@ -46,6 +48,7 @@ public class MainScreen extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -148,6 +151,11 @@ public class MainScreen extends javax.swing.JFrame {
         jTabbedPane1.addTab("Simulacion", jPanel2);
 
         jMenu1.setText("Equipo");
+        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu1ActionPerformed(evt);
+            }
+        });
 
         jMenuItem2.setText("Editar");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -164,6 +172,14 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jMenuItem1);
+
+        jMenuItem3.setText("Cargar Archivo");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
 
         jMenuBar1.add(jMenu1);
 
@@ -190,13 +206,23 @@ public class MainScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        Equipo team = Functions.createTeam( JOptionPane.showInputDialog("Ingrese el nombre del nuevo equipo: ") );
-        Functions.addTeam(team);
-        Functions.writeToFile();
+        String name = JOptionPane.showInputDialog("Ingrese el nombre del nuevo equipo: ");
         
-        DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();
-        addRow(model,team);
-        loadTeams();
+        try{
+            if(name.length() > 1){
+                Equipo team = Functions.createTeam( name );
+                Functions.addTeam(team);
+                Functions.writeToFile();
+
+                DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();
+                addRow(model,team);
+                loadTeams();
+            }else{
+                JOptionPane.showMessageDialog(this, "Debe ingresar un nombre valido");
+            }
+        }catch(NullPointerException e){
+            
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -212,6 +238,7 @@ public class MainScreen extends javax.swing.JFrame {
             Functions.writeToFile();
             
             model.removeRow(teamsTable.getSelectedRow());
+            loadTeams();
         }else{
             JOptionPane.showMessageDialog(this, "Seleccione el equipo a eliminar");
         }
@@ -231,6 +258,26 @@ public class MainScreen extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
+ 
+       
+    
+    }//GEN-LAST:event_jMenu1ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            Functions.readFile(selectedFile);
+            Functions.getTeams().clear();
+            Functions.loadTeams();
+            updateTable();
+            loadTeams();
+        }
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void addRow(DefaultTableModel model,Equipo team){
         model.addRow(new Object[]{team.getName(),team.getPj(),team.getPg(),team.getPe(),team.getPp(),team.getGf(),team.getGc(),team.getDg(),team.getPts()});
@@ -328,6 +375,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
