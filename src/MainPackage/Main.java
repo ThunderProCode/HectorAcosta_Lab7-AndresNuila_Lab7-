@@ -9,6 +9,8 @@ public class Main {
         MainScreen.setVisible(true);
         Functions.loadTeams();
         MainScreen.fillTable();
+        MainScreen.loadTeams();
+        MainScreen.sortArrayList();
     }
 
     public static MainScreen getMainScreen() {

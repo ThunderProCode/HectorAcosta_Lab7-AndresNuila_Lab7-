@@ -5,8 +5,10 @@
  */
 package MainPackage;
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.TableView.TableRow;
 
 /**
  *
@@ -36,6 +38,10 @@ public class MainScreen extends javax.swing.JFrame {
         teamsTable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        team1 = new javax.swing.JComboBox<>();
+        team2 = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -48,14 +54,14 @@ public class MainScreen extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nombre", "Partidos Ganados", "Partidos Empatados", "Partidos Perdidos", "Goles Favor", "Goles Contra", "Diferencia", "Pts"
+                "Nombre", "Partidos Jugados", "Partidos Ganados", "Partidos Empatados", "Partidos Perdidos", "Goles Favor", "Goles Contra", "Diferencia", "Pts"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -100,15 +106,43 @@ public class MainScreen extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Tabla", jPanel1);
 
+        jLabel1.setText("VS");
+
+        jToggleButton1.setText("Jugar");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 950, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(152, 152, 152)
+                .addComponent(team1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(76, 76, 76)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addComponent(team2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(144, 144, 144))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(387, 387, 387))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 169, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(team1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(team2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21))
         );
 
         jTabbedPane1.addTab("Simulacion", jPanel2);
@@ -162,7 +196,7 @@ public class MainScreen extends javax.swing.JFrame {
         
         DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();
         addRow(model,team);
-        
+        loadTeams();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -183,13 +217,28 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        Equipo e1 = Functions.getTeamByName(team1.getSelectedItem().toString());
+        Equipo e2 = Functions.getTeamByName(team2.getSelectedItem().toString());
+
+        if(!e1.getName().equals(e2.getName())){
+            Functions.match(e1, e2);
+            updateTable();
+            Functions.writeToFile();
+        }else{
+            JOptionPane.showMessageDialog(null,"Debe seleccionar dos equipos diferentes");
+        }
+        
+        
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
+
     private void addRow(DefaultTableModel model,Equipo team){
         model.addRow(new Object[]{team.getName(),team.getPj(),team.getPg(),team.getPe(),team.getPp(),team.getGf(),team.getGc(),team.getDg(),team.getPts()});
     }
     
     public void fillTable(){
         DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();
-        
+        sortArrayList();
         for (Equipo team : Functions.getTeams()) {
             addRow(model,team);
         }
@@ -198,6 +247,7 @@ public class MainScreen extends javax.swing.JFrame {
     public void updateTable(){
         emptyTable();
         DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();
+        sortArrayList();
         for (Equipo team : Functions.getTeams()) {
             addRow(model,team);
         }
@@ -206,6 +256,32 @@ public class MainScreen extends javax.swing.JFrame {
     private void emptyTable(){
         DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();
         model.setRowCount(0);
+    }
+    
+    public void loadTeams(){
+        team1.removeAllItems();
+        for (Equipo team : Functions.getTeams()) {
+            team1.addItem(team.getName());
+        }
+        
+        team2.removeAllItems();
+        for (Equipo team : Functions.getTeams()) {
+            team2.addItem(team.getName());
+        }
+    }
+    
+    public void sortArrayList(){
+        for (int i = 0; i < Functions.getTeams().size(); i++){  
+            for (int j = i + 1; j < Functions.getTeams().size(); j++){  
+                Equipo tmp = null;
+                if (Functions.getTeams().get(i).getPts() < Functions.getTeams().get(j).getPts()){  
+                    tmp = Functions.getTeams().get(i);
+                    
+                    Functions.getTeams().set(i, Functions.getTeams().get(j));
+                    Functions.getTeams().set(j, tmp);
+                }  
+            }
+        }
     }
     
     /**
@@ -247,6 +323,7 @@ public class MainScreen extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -255,6 +332,9 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JComboBox<String> team1;
+    private javax.swing.JComboBox<String> team2;
     private javax.swing.JTable teamsTable;
     // End of variables declaration//GEN-END:variables
 }
