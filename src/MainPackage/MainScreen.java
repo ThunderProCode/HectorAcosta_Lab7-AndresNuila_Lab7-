@@ -34,12 +34,12 @@ public class MainScreen extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         teamsTable = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,21 +68,34 @@ public class MainScreen extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(teamsTable);
 
+        jButton1.setText("Delete");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Tabla", jPanel1);
@@ -95,7 +108,7 @@ public class MainScreen extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 217, Short.MAX_VALUE)
+            .addGap(0, 169, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Simulacion", jPanel2);
@@ -118,9 +131,6 @@ public class MainScreen extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem3.setText("Eliminar");
-        jMenu1.add(jMenuItem3);
-
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -138,8 +148,8 @@ public class MainScreen extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -159,17 +169,43 @@ public class MainScreen extends javax.swing.JFrame {
         Functions.initEditScreen();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();        
+        if(teamsTable.getSelectedRow() != -1){
+            String name = model.getValueAt(teamsTable.getSelectedRow(), 0).toString();
+            Equipo team = Functions.getTeamByName(name);
+            Functions.deleteTeam(team);
+            Functions.writeToFile();
+            
+            model.removeRow(teamsTable.getSelectedRow());
+        }else{
+            JOptionPane.showMessageDialog(this, "Seleccione el equipo a eliminar");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void addRow(DefaultTableModel model,Equipo team){
         model.addRow(new Object[]{team.getName(),team.getPj(),team.getPg(),team.getPe(),team.getPp(),team.getGf(),team.getGc(),team.getDg(),team.getPts()});
     }
     
-    public void fillTable(){ 
+    public void fillTable(){
         DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();
-        teamsTable.setModel(model);    
         
         for (Equipo team : Functions.getTeams()) {
             addRow(model,team);
         }
+    }
+    
+    public void updateTable(){
+        emptyTable();
+        DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();
+        for (Equipo team : Functions.getTeams()) {
+            addRow(model,team);
+        }
+    }
+    
+    private void emptyTable(){
+        DefaultTableModel model = (DefaultTableModel) teamsTable.getModel();
+        model.setRowCount(0);
     }
     
     /**
@@ -210,11 +246,11 @@ public class MainScreen extends javax.swing.JFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

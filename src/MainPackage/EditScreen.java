@@ -5,6 +5,8 @@
  */
 package MainPackage;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ThunderKnight
@@ -85,7 +87,7 @@ public class EditScreen extends javax.swing.JFrame {
 
         jButton2.setText("Cancelar");
 
-        teams.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        teams.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Barcelona" }));
         teams.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 teamsItemStateChanged(evt);
@@ -193,7 +195,13 @@ public class EditScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void teamsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_teamsActionPerformed
-        
+        try{
+            Equipo team = Functions.getTeamByName(teams.getSelectedItem().toString());
+            setValues(team);    
+        }catch(Exception ex){
+            
+        }
+            
     }//GEN-LAST:event_teamsActionPerformed
 
     private void teamsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_teamsItemStateChanged
@@ -201,8 +209,7 @@ public class EditScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_teamsItemStateChanged
 
     private void teamsCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_teamsCaretPositionChanged
-        Equipo team = Functions.getTeamByName(teams.getSelectedItem().toString());
-        setValues(team);
+        
     }//GEN-LAST:event_teamsCaretPositionChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -212,8 +219,14 @@ public class EditScreen extends javax.swing.JFrame {
         team.setPg( (Integer) pg.getValue() );
         team.setPe( (Integer) pe.getValue() );
         team.setPp( (Integer) pp.getValue() );
+        team.setGf( (Integer) gf.getValue() );
         team.setGc((Integer) gc.getValue() );
-
+        team.setDg( (Integer) dg.getValue() );
+        team.setPts( (Integer) pts.getValue() );
+        Main.getMainScreen().updateTable();
+        Functions.writeToFile();
+        this.dispose();
+        JOptionPane.showMessageDialog(this, "Equipo Modificado");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     
