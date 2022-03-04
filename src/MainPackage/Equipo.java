@@ -1,27 +1,17 @@
 package MainPackage;
-
 public class Equipo {
-    
     private String name;
-    private int pj;
-    private int pg;    
-    private int pe;
-    private int pp;
-    private int gf;
-    private int gc;
-    private int dg;
-    private int pts;
+    private int pj = 0;
+    private int pg = 0;    
+    private int pe = 0;
+    private int pp = 0;
+    private int gf = 0;
+    private int gc = 0;
+    private int dg = 0;
+    private int pts = 0;
 
-    public Equipo(String name, int pj, int pg, int pe, int pp, int gf, int gc, int dg, int pts) {
+    public Equipo(String name) {
         this.name = name;
-        this.pj = pj;
-        this.pg = pg;
-        this.pe = pe;
-        this.pp = pp;
-        this.gf = gf;
-        this.gc = gc;
-        this.dg = dg;
-        this.pts = pts;
     }
     
     /**
